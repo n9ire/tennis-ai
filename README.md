@@ -21,6 +21,8 @@ This README is a concise guide describing the models included in this repo, how 
 | XGBoost | 70-75% | 80-85% |
 | Neural Network (PyTorch) | 57-64%| 70% |
 
+**ROC AUC (Area Under the Receiver Operating Characteristic Curve) is a key metric in machine learning for evaluating binary classification models, showing how well a model distinguishes between positive and negative classes across all possible thresholds, with AUC of 1.0 being perfect and 0.5 being random chance, indicating better model performance. It summarizes the trade-off between True Positive Rate (Sensitivity) and False Positive Rate (1-Specificity) shown in the ROC curve.**
+
 ## How the models work
 - **Elo preprocessing**: `scripts/elo.py` computes player Elo ratings strictly using matches prior to each match (no leakage).
 - **Feature engineering**: create numeric diffs (`elo_diff`, `rank_diff`, etc.), keep pre-match-only columns, one-hot encode categorical fields (`surface`, `round`).
@@ -114,6 +116,7 @@ R_A' = R_A + K(S_A - E_A)
 
 ## SOON TO COME
 - An online instance of this model (**cough cough** https://tennis.noire.li/)
+
 
 
 
