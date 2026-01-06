@@ -5,6 +5,7 @@ This README is a concise guide describing the models included in this repo, how 
 ## 📖 Dictionary
 - [Overview](#Overview)
 - [Data](#Data)
+- [How the Models Work](#How-the-models-work)
 
 ### Overview
 - **Purpose**: Predict the winner of an ATP tennis match (binary: Player A wins or loses) using pre-match features.
@@ -50,4 +51,5 @@ R_A' = R_A + K(S_A - E_A)
 
 ### SOON TO COME
 - An online instance of this model (**cough cough** https://tennis.noire.li/)
+
 
