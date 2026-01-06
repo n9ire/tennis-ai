@@ -1,6 +1,9 @@
-# tennis-ai
+<h1 align="center">tennis-ai</h1>
 
 This README is a concise guide describing the models included in this repo, how they work, and how to run them.
+
+**Origin:**
+- I originally made these models after watching a video from [Green Code](https://www.youtube.com/watch?v=N4JDlSTMOck) where he created a Decistion Tree Model and then a XGBoost Model reach 80% accuracy. I wanted to see how far I could take these models and even beat the accuracy of the IBM Models that Wimbledon probably pay stupid amounts of money for.
 
 ## 📖 Dictionary
 - [Overview](#Overview)
@@ -12,7 +15,7 @@ This README is a concise guide describing the models included in this repo, how 
 - [Future Features](#SOON-TO-COME)
 
 ## Overview
-- **Purpose**: Predict the winner of an ATP tennis match (binary: Player A wins or loses) using pre-match features.
+- **Purpose**: Predict the winner of an ATP tennis match utilising binary-classification using pre-match features.
 - **Main models**: XGBoost classifier (tabular, tree-based) and simple neural-network experiments (in `nns/`).
 
 ## Performance
@@ -116,6 +119,7 @@ R_A' = R_A + K(S_A - E_A)
 
 ## SOON TO COME
 - An online instance of this model (**cough cough** https://tennis.noire.li/)
+
 
 
 
