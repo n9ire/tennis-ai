@@ -6,7 +6,7 @@ This README is a concise guide describing the models included in this repo, how 
 - [Overview](#Overview)
 - [Data](#Data)
 - [How the Models Work](#How-the-models-work)
-- [XGBoost's Advantages](#XGBoost's-Advantages)
+- [XGBoost's Advantages](#XGBoost-Advantages)
 - [Elo Rating System](#Elo-Rating-System)
 
 ### Overview
@@ -24,7 +24,7 @@ This README is a concise guide describing the models included in this repo, how 
 - **XGBoost pipeline**: numeric features pass through; categorical features are one-hot encoded; final estimator is `xgboost.XGBClassifier` trained on chronological splits (no shuffling) to avoid leakage.
 - **Neural nets**: notebooks under `nns/` contain small MLP experiments — useful as baselines but typically underperform tuned XGBoost on this tabular task.
 
-### XGBoost's Advantages
+### XGBoost Advantages
 - Handles non-linear interactions and missing values well.
 - No feature scaling required and strong performance on tabular sports data.
 
@@ -53,6 +53,7 @@ R_A' = R_A + K(S_A - E_A)
 
 ### SOON TO COME
 - An online instance of this model (**cough cough** https://tennis.noire.li/)
+
 
 
 
