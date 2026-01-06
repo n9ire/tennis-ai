@@ -2,65 +2,51 @@
 
 This README is a concise guide describing the models included in this repo, how they work, and how to run them.
 
-**Overview**
+## 📖 Dictionary
+- [Overview](###Overview)
+- [Data](###Data)
+
+### Overview
 - **Purpose**: Predict the winner of an ATP tennis match (binary: Player A wins or loses) using pre-match features.
 - **Main models**: XGBoost classifier (tabular, tree-based) and simple neural-network experiments (in `nns/`).
 
-**Data**
-- **Source files**: per-year match CSVs are in [tennis](tennis/).
+### Data
+- **Source files**: per-year match CSVs are in [atp_matches](atp_matches/).
 - **Processed datasets**: merged and feature-engineered CSVs are in [merged_tennis_files](merged_tennis_files/).
 - **Key features**: pre-match Elo ratings, ranks, ages, heights, surface, round, and engineered diffs (e.g., `elo_diff`).
 
-**How the models work**
+### How the models work
 - **Elo preprocessing**: `scripts/elo.py` computes player Elo ratings strictly using matches prior to each match (no leakage).
 - **Feature engineering**: create numeric diffs (`elo_diff`, `rank_diff`, etc.), keep pre-match-only columns, one-hot encode categorical fields (`surface`, `round`).
 - **XGBoost pipeline**: numeric features pass through; categorical features are one-hot encoded; final estimator is `xgboost.XGBClassifier` trained on chronological splits (no shuffling) to avoid leakage.
 - **Neural nets**: notebooks under `nns/` contain small MLP experiments — useful as baselines but typically underperform tuned XGBoost on this tabular task.
 
-**Why XGBoost?**
+### XGBoost's Advantages
 - Handles non-linear interactions and missing values well.
 - No feature scaling required and strong performance on tabular sports data.
 
-**Quick run instructions**
-- Create a virtual environment and install requirements:
+### Elo Rating System
 
-```bash
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
+Elo estimates the expected outcome between two players based on their ratings:
+
+```math
+E_A = \frac{1}{1 + 10^{(R_B - R_A)/400}}
 ```
 
-- If you don't have `requirements.txt`, install minimal deps:
+Ratings are updated after a match using:
 
-```bash
-pip install pandas numpy scikit-learn xgboost
+```math
+R_A' = R_A + K(S_A - E_A)
 ```
 
-- Example: run the XGBoost training script (uses processed CSVs from `merged_tennis_files`):
+**Symbol Definitions:**
+- Ra — current rating of player A  
+- Rb — current rating of player B  
+- Ea — expected score for player A  
+- Sa — actual score for player A  
+- Ra' — updated rating of player A  
+- K — rating update factor  
 
-```bash
-python scripts/xgboost.py --data merged_tennis_files/tennis_matches_ml_with_elo.csv --out models/xgb.pkl
-```
 
-- Compute Elo ratings (if you need to recreate features):
-
-```bash
-python scripts/elo.py --input tennis/ --output merged_tennis_files/tennis_matches_with_elo.csv
-```
-
-**Where to look**
-- `scripts/xgboost.py` — example training entrypoint and hyperparameters.
-- `scripts/elo.py` — Elo calculation utilities (pre-match Elo construction).
-- `nns/` — neural-net experiment notebooks.
-- `xgboost-models/` — experimentation notebooks and saved artifacts.
-
-**Notes & best practices**
-- Always compute Elo and features using only data available before each match.
-- Use chronological train/validation/test splits to avoid leakage.
-- Remove in-match columns (e.g., `minutes`) for pre-match models.
-
-**Want changes?**
-- I kept this README focused on "how it works" and how to run training/inference. Tell me if you want a shorter summary, example commands added to scripts, or a `requirements.txt` generated.
-
----
-Updated README to focus on models, data, and run instructions.
+### SOON TO COME
+- An online instance of this model (**cough cough** https://tennis.noire.li/)
