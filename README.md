@@ -105,7 +105,7 @@ The model is evaluated using the following metrics:
 | Model                  | Accuracy | ROC-AUC |
 |------------------------|----------|---------|
 | Logistic Regression    | ~63%     | ~0.68   |
-| Neural Network (MLP)   | ~72–75%  | ~0.78   |
+| Neural Network (MLP)   | ~57-64%  | ~0.62   |
 | **XGBoost (Final)**    | **75–80%** | **0.82–0.87** |
 
 > Performance varies slightly depending on season range, surface distribution, and feature availability.
@@ -194,3 +194,4 @@ Random seeds are fixed where applicable to ensure consistent results.
 ---
 
 *Built for robust, data-driven tennis analytics.*
+
