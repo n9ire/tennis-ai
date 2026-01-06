@@ -109,12 +109,12 @@ R_A' = R_A + K(S_A - E_A)
 ## Links
 - [ATP Matches Datasets](https://github.com/JeffSackmann/tennis_atp)
 - [XGBoost Python Module](https://xgboost.readthedocs.io/en/stable/python/python_intro.html)
-- 
 
 ---
 
 ## SOON TO COME
 - An online instance of this model (**cough cough** https://tennis.noire.li/)
+
 
 
 
