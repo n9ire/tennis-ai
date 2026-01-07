@@ -107,6 +107,7 @@ These are mostly small multi-layer perceptrons (MLPs) trained on the same engine
 - [My XGBoost Models](https://github.com/n9ire/tennis-ai/tree/main/xgboost-models)
 - [My Neural Network Models](https://github.com/n9ire/tennis-ai/tree/main/nns)
 - [My Custom Merged Tennis Datasets](https://github.com/n9ire/tennis-ai/tree/main/merged_tennis_files)
+- [Visual XGBoost Trees](https://github.com/n9ire/tennis-ai/tree/main/xgboost-models/xgboost-visuals)
 
 ---
 
@@ -191,4 +192,5 @@ R_A' = R_A + K(S_A - E_A)
 ---
 
 ## SOON TO COME
+
 - An online instance of this model (**cough cough** https://tennis.noire.li/)
