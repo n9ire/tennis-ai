@@ -1,6 +1,9 @@
-# tennis-ai
+<h1 align="center">tennis-ai</h1>
 
 This README is a concise guide describing the models included in this repo, how they work, and how to run them.
+
+**Origin:**
+- I originally made these models after watching a video from [Green Code](https://www.youtube.com/watch?v=N4JDlSTMOck) where he created a Decistion Tree Model and then a XGBoost Model reach 80% accuracy. I wanted to see how far I could take these models and even beat the accuracy of the IBM Models that Wimbledon probably pay stupid amounts of money for.
 
 ## 📖 Dictionary
 - [Overview](#Overview)
@@ -12,7 +15,7 @@ This README is a concise guide describing the models included in this repo, how 
 - [Future Features](#SOON-TO-COME)
 
 ## Overview
-- **Purpose**: Predict the winner of an ATP tennis match (binary: Player A wins or loses) using pre-match features.
+- **Purpose**: Predict the winner of an ATP tennis match utilising binary-classification using pre-match features.
 - **Main models**: XGBoost classifier (tabular, tree-based) and simple neural-network experiments (in `nns/`).
 
 ## Performance
@@ -20,6 +23,8 @@ This README is a concise guide describing the models included in this repo, how 
 |------|--------|----------------|
 | XGBoost | 70-75% | 80-85% |
 | Neural Network (PyTorch) | 57-64%| 70% |
+
+**ROC AUC (Area Under the Receiver Operating Characteristic Curve) is a key metric in machine learning for evaluating binary classification models, showing how well a model distinguishes between positive and negative classes across all possible thresholds, with AUC of 1.0 being perfect and 0.5 being random chance, indicating better model performance. It summarizes the trade-off between True Positive Rate (Sensitivity) and False Positive Rate (1-Specificity) shown in the ROC curve.**
 
 ## How the models work
 - **Elo preprocessing**: `scripts/elo.py` computes player Elo ratings strictly using matches prior to each match (no leakage).
@@ -109,12 +114,14 @@ R_A' = R_A + K(S_A - E_A)
 ## Links
 - [ATP Matches Datasets](https://github.com/JeffSackmann/tennis_atp)
 - [XGBoost Python Module](https://xgboost.readthedocs.io/en/stable/python/python_intro.html)
-- 
 
 ---
 
 ## SOON TO COME
 - An online instance of this model (**cough cough** https://tennis.noire.li/)
+
+
+
 
 
 
