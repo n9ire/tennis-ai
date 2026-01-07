@@ -163,6 +163,9 @@ Rather than competing directly, these approaches are often complementary. In pra
 **Definition**
 - The Elo rating system is used to measure a player’s relative skill level by updating their rating after each match based on the opponent’s strength and the match result. It provides a dynamic way to estimate how likely a player is to win against another.
 
+**Why was this implemented with the models (more specifically the XGBoost model)**
+- An Elo rating system improves an XGBoost model’s accuracy by encoding a player’s latent skill into a single, noise-resistant feature that reflects long-term performance better than raw rankings or stats. When computed pre-match and combined with surface-specific Elo, it gives XGBoost a strong, leakage-free signal that significantly improves generalization on future matches.
+
 **How it work's**
 - Elo estimates the expected outcome between two players based on their ratings:
 
@@ -205,4 +208,5 @@ R_A' = R_A + K(S_A - E_A)
 ## SOON TO COME
 
 - An online instance of this model (**cough cough** https://tennis.noire.li/)
+
 
