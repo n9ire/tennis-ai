@@ -108,6 +108,7 @@ These are mostly small multi-layer perceptrons (MLPs) trained on the same engine
 - [My Neural Network Models](https://github.com/n9ire/tennis-ai/tree/main/nns)
 - [My Custom Merged Tennis Datasets](https://github.com/n9ire/tennis-ai/tree/main/merged_tennis_files)
 - [Visual XGBoost Trees](https://github.com/n9ire/tennis-ai/tree/main/xgboost-models/xgboost-visuals)
+- [Plotting Images](https://github.com/n9ire/tennis-ai/tree/main/images)
 
 ---
 
@@ -188,9 +189,20 @@ R_A' = R_A + K(S_A - E_A)
 ## Links
 - [ATP Matches Datasets](https://github.com/JeffSackmann/tennis_atp)
 - [XGBoost Python Module](https://xgboost.readthedocs.io/en/stable/python/python_intro.html)
+- [PyTorch](https://pytorch.org/)
+
+---
+
+## Plots
+
+<div align="center">
+  <img src="images/elo_dataset_pp_2026-01-06 18:38:32.635334.png" width="400" />
+  <img src="images/elo_dataset_pp_2026-01-06 19:04:27.943331.png" width="400" />
+</div>
 
 ---
 
 ## SOON TO COME
 
 - An online instance of this model (**cough cough** https://tennis.noire.li/)
+
