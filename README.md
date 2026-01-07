@@ -1,9 +1,9 @@
 <h1 align="center">tennis-ai</h1>
 
-This README is a concise guide describing the models included in this repo, how they work, and how to run them.
+This README is a straightforward guide to what’s in this repo, how the models work, and how to run or extend them.
 
 **Origin:**
-- I originally made these models after watching a video from [Green Code](https://www.youtube.com/watch?v=N4JDlSTMOck) where he created a Decistion Tree Model and then a XGBoost Model reach 80% accuracy. I wanted to see how far I could take these models and even beat the accuracy of the IBM Models that Wimbledon probably pay stupid amounts of money for.
+- This project started after I watched a video by [Green Code](https://www.youtube.com/watch?v=N4JDlSTMOck) where he built a Decision Tree model and later an XGBoost model that reached around 80% accuracy. I wanted to see how far I could realistically push similar ideas, and whether I could get anywhere near (or even past) the kind of models Wimbledon and IBM probably pay absurd amounts of money for.
 
 ## 📖 Dictionary
 - [Overview](#Overview)
@@ -15,8 +15,10 @@ This README is a concise guide describing the models included in this repo, how 
 - [Future Features](#SOON-TO-COME)
 
 ## Overview
-- **Purpose**: Predict the winner of an ATP tennis match utilising binary-classification using pre-match features.
-- **Main models**: XGBoost classifier (tabular, tree-based) and simple neural-network experiments (in `nns/`).
+- **Purpose**: Predict the winner of an ATP tennis match using binary classification based entirely on pre-match features.
+- **Main models**: An XGBoost classifier (tree-based, tabular) and some experimental neural networks located in `nns/`.
+
+---
 
 ## Performance
 | Model | Accuracy | ROC AUC |
@@ -24,53 +26,123 @@ This README is a concise guide describing the models included in this repo, how 
 | XGBoost | 70-75% | 80-85% |
 | Neural Network (PyTorch) | 57-64%| 70% |
 
-**ROC AUC (Area Under the Receiver Operating Characteristic Curve) is a key metric in machine learning for evaluating binary classification models, showing how well a model distinguishes between positive and negative classes across all possible thresholds, with AUC of 1.0 being perfect and 0.5 being random chance, indicating better model performance. It summarizes the trade-off between True Positive Rate (Sensitivity) and False Positive Rate (1-Specificity) shown in the ROC curve.**
+**ROC AUC (Area Under the Receiver Operating Characteristic Curve)** is a common metric for evaluating binary classifiers. It measures how well a model separates the positive and negative classes across all possible decision thresholds. An AUC of 1.0 is perfect, 0.5 is no better than random guessing, and higher values mean better discrimination. In simple terms, it tells you how good the model is at ranking winners above losers.
+
+---
 
 ## How the models work
-- **Elo preprocessing**: `scripts/elo.py` computes player Elo ratings strictly using matches prior to each match (no leakage).
-- **Feature engineering**: create numeric diffs (`elo_diff`, `rank_diff`, etc.), keep pre-match-only columns, one-hot encode categorical fields (`surface`, `round`).
-- **XGBoost pipeline**: numeric features pass through; categorical features are one-hot encoded; final estimator is `xgboost.XGBClassifier` trained on chronological splits (no shuffling) to avoid leakage.
-- **Neural nets**: notebooks under `nns/` contain small MLP experiments — useful as baselines but typically underperform tuned XGBoost on this tabular task.
 
-## Model Selection
+### Elo preprocessing (core signal)
+`scripts/elo.py` computes **pre-match Elo ratings** by processing matches in **strict chronological order**, which is critical to avoid any form of data leakage.
 
-Predicting tennis match outcomes is challenging due to non-linear relationships, player variability, surface effects, and time-based trends. Both **XGBoost** and **Neural Networks** are well-suited for this task, each offering distinct advantages.
+For each match:
+- Each player’s **global Elo** is read *before* the match starts
+- A **surface-specific Elo** (hard / clay / grass) is also tracked
+- Elo ratings are updated **only after** the match result is known
+
+This produces four Elo-related features:
+- `player_a_elo`, `player_b_elo`
+- `elo_diff`
+- `elo_surface_diff`
+
+Elo ratings capture underlying player strength in a way that raw rankings, age, or height simply can’t.  
+In practice, adding Elo features improves out-of-sample accuracy by roughly **4–7 percentage points** compared to training without Elo.
+
+---
+
+### Feature engineering
+All features are built using **only information available before the match**.
+
+**Numeric difference features**
+- `elo_diff`
+- `elo_surface_diff`
+- `rank_diff`
+- `age_diff`
+- `height_diff`
+
+Using difference-based features helps reduce scale issues and encourages the model to learn *relative* advantages instead of absolute values.
+
+**Categorical features**
+- `surface`
+- `round`
+- `player_a_hand`
+- `player_b_hand`
+
+Categorical features are **one-hot encoded** during training.
+
+Player names and match dates are kept in the dataset for **Elo calculation, joins, and analysis**, but they are **explicitly excluded** from model training.
+
+---
+
+### XGBoost pipeline
+The main model is a gradient-boosted decision tree using `xgboost.XGBClassifier`.
+
+Pipeline overview:
+- Numeric features are passed through as-is
+- Categorical features are one-hot encoded
+- The model is trained using **chronological train/test splits** (no random shuffling)
+
+Chronological splitting ensures the model is always tested on **future matches**, which prevents time-based leakage that would otherwise inflate results.
+
+With Elo and engineered features included, the XGBoost model consistently reaches:
+- **~70–75% accuracy**
+- **~0.75–0.80 ROC AUC**
+
+For tennis match prediction, which is inherently noisy and unpredictable, this is a solid result.
+
+---
+
+### Neural network baselines
+Exploratory neural network models live in notebooks under `nns/`.
+
+These are mostly small multi-layer perceptrons (MLPs) trained on the same engineered features. They’re useful as baselines, but they generally **underperform well-tuned XGBoost models** on this dataset due to:
+- Relatively limited data per player
+- Weaker inductive bias for tabular feature interactions
+- Higher sensitivity to noise and feature scaling
+
+---
+
+## Spiders Web
+
+- [My XGBoost Models](https://github.com/n9ire/tennis-ai/tree/main/xgboost-models)
+- [My Neural Network Models](https://github.com/n9ire/tennis-ai/tree/main/nns)
+- [My Custom Merged Tennis Datasets](https://github.com/n9ire/tennis-ai/tree/main/merged_tennis_files)
 
 ---
 
 ### Why XGBoost Works Well
 
 **Structured Data Performance**  
-Tennis datasets are typically tabular, including rankings, surface records, head-to-head stats, and recent form. XGBoost is highly optimized for this type of structured data.
+Tennis data is mostly tabular: rankings, surfaces, form indicators, and head-to-head stats. XGBoost is built for exactly this kind of data.
 
 **Non-Linear Feature Interactions**  
-XGBoost naturally captures interactions such as surface strengths, ranking gaps adjusted by form, and fatigue effects without extensive manual feature engineering.
+XGBoost naturally learns interactions like surface-specific strength, ranking gaps adjusted by form, and subtle matchup effects without a ton of manual work.
 
 **Robustness on Limited or Noisy Data**  
-Sports data often contains missing or noisy values. XGBoost handles these cases well and performs strongly on small to medium-sized datasets.
+Sports data is messy. XGBoost handles missing values and noise well and performs reliably on small to medium datasets.
 
 **Interpretability**  
-Feature importance and decision paths help explain predictions, making the model easier to validate and analyze.
+Feature importance scores and tree structures make it easier to understand *why* the model is making certain predictions.
 
 ---
 
 ### Why Neural Networks Work Well
 
 **Complex Pattern Learning**  
-Neural Networks model deep, non-linear relationships such as momentum, latent player form, and indirect performance signals.
+Neural networks can model deep, non-linear relationships such as momentum, latent form, and indirect performance signals.
 
 **Temporal Awareness**  
-When match data is ordered chronologically, Neural Networks can capture trends, streaks, and form progression that influence outcomes.
+When data is ordered chronologically, neural networks can learn trends, streaks, and form changes over time.
 
 **Automatic Feature Learning**  
-Neural Networks reduce reliance on handcrafted features by learning internal representations of players and match context.
+They can reduce reliance on handcrafted features by learning internal representations of players and match context.
 
 **Scalability**  
-They scale effectively with larger datasets and additional inputs, such as expanded match statistics or external signals.
+With more data and richer inputs, neural networks can scale very effectively.
 
 ---
 
-### Complementary Strengths
+### Each Models Strengths
 
 | Aspect | XGBoost | Neural Network |
 |------|--------|----------------|
@@ -80,8 +152,9 @@ They scale effectively with larger datasets and additional inputs, such as expan
 | Training speed | Fast | Slower |
 | Feature engineering | Important | Less required |
 
-Rather than competing, these models are often complementary and can be combined in ensemble approaches for improved performance.
+Rather than competing directly, these approaches are often complementary. In practice, they can be combined in ensemble models to squeeze out even better performance.
 
+---
 
 ## Elo Rating System
 
@@ -119,11 +192,3 @@ R_A' = R_A + K(S_A - E_A)
 
 ## SOON TO COME
 - An online instance of this model (**cough cough** https://tennis.noire.li/)
-
-
-
-
-
-
-
-
